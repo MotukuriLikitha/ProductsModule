@@ -27,7 +27,11 @@ jobs:
         run: |
           # Run Newman with the collection and environment file from the repo
           newman run ./ProductsModule.postman_collection.json -d ./product_data.json -g ./workspace.postman_globals.json --reporters cli,html --reporter-html-export newman-report.html
-
+      - name: List directory to confirm report file exists
+        run: |
+          echo "Listing directory contents"
+          dir  # On Windows, `dir` will list files in the current directory
+          
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v2  # Upload the report as an artifact
         with:
