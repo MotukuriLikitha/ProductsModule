@@ -1,48 +1,40 @@
-name: Run Postman Collection on Windows
-
 on:
   push:
     branches:
-      - master  # Run on push to the main branch
+      - master
   # pull_request:
   #   branches:
-  #     - main  # Run on pull requests targeting the main branch
-  workflow_dispatch:
-  
+  #     - main
+
 jobs:
-  test:
-    runs-on: windows-latest  # Use the Windows runner
+  newman:
+    runs-on: windows-latest  # Use Windows runner
 
     steps:
-      # Checkout the repository code
-      - uses: actions/checkout@v3
-      - name: Create dir
-        run: |
-          mkdir SampleArtifact
-        
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Checkout the repository to access files
 
-      # # Set up Node.js (required to install Newman)
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: '14'  # You can choose another version if necessary
-
-      # # Install Newman globally
-      # - name: Install Newman
-      #   run: |
-      #     npm install -g newman
-
-      # Run the Postman collection
-      - name: Run Postman Collection
-        run: |
-         newman run .\ProductsModule.postman_collection.json \
-         -g .\workspace.postman_globals.json \ 
-         -d .\product_data.json \
-         --reporter-html-export .\newman-report.html
-                
-      # Upload test results as an artifact (optional)
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2  # Set up Node.js
         with:
-          name: newman-reports
-          path: .\newman-report.html
+          node-version: '14'  # Specify the Node.js version
+      - name: Install Newman and reporters
+        run: |
+          npm install -g newman  # Install Newman globally
+          npm install -g newman-reporter-cli newman-reporter-html  # Install CLI and HTML reporters
+
+      - name: Run Newman tests
+        run: |
+          # Run Newman with the collection and environment file from the repo
+          newman run ./ProductsModule.postman_collection.json -d ./product_data.json -g ./workspace.postman_globals.json --reporters cli,html --reporter-html-export newman-report.html
+
+      - name: Upload Newman HTML report
+        uses: actions/upload-artifact@v2  # Upload the report as an artifact
+        with:
+          name: newman-report
+          path: newman-report.html  # Path to the generated report
+
+      - name: Post status if tests fail
+        if: ${{ failure() }}  # Only run if tests fail
+        run: |
+          echo "Test run failed. Please check the Newman report for details."
