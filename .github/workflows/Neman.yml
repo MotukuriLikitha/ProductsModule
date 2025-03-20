@@ -2,12 +2,13 @@ name: Run Postman Collection on Windows
 
 on:
   push:
-    branches:
+    branches:["Master"]
       - main  # Run on push to the main branch
   # pull_request:
   #   branches:
   #     - main  # Run on pull requests targeting the main branch
-
+  workflow_dispatch:
+  
 jobs:
   run-postman-collection:
     runs-on: windows-latest  # Use the Windows runner
