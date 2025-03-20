@@ -1,0 +1,43 @@
+name: Run Postman Collection on Windows
+
+on:
+  push:
+    branches:
+      - main  # Run on push to the main branch
+  # pull_request:
+  #   branches:
+  #     - main  # Run on pull requests targeting the main branch
+
+jobs:
+  run-postman-collection:
+    runs-on: windows-latest  # Use the Windows runner
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # # Set up Node.js (required to install Newman)
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '14'  # You can choose another version if necessary
+
+      # # Install Newman globally
+      # - name: Install Newman
+      #   run: |
+      #     npm install -g newman
+
+      # Run the Postman collection
+      - name: Run Postman Collection
+        run: |
+          # Replace 'your_collection.json' with your Postman collection file
+          # If you're using an environment, replace 'your_environment.json' accordingly
+          newman run ./ProductsModule.postman_collection.json\ -g ./workspace.postman_globals.json\ -d /product_data.json  -r htmlextra --reporter-htmlextra-export ./results/report.html --reporter-htmlextra-browserTitle "Product API Test Report" --reporter-htmlextra-title "Product API Test Summary"
+                
+      # Upload test results as an artifact (optional)
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: newman-reports
+          path: .\newman-report.html
