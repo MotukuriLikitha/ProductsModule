@@ -21,7 +21,7 @@ jobs:
       - name: Install Newman and reporters
         run: |
           npm install -g newman  # Install Newman globally
-          npm install -g newman-reporter-cli newman-reporter-html  # Install CLI and HTML reporters
+          # npm install -g newman-reporter-cli newman-reporter-html  # Install CLI and HTML reporters
 
       - name: Run Newman tests
         run: |
