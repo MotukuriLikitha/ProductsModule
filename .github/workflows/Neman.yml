@@ -15,19 +15,22 @@ jobs:
 
     steps:
       # Checkout the repository code
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Set up Node.js (required to install Newman)
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'  # You can choose another version if necessary
-
-      # Install Newman globally
-      - name: Install Newman
+      - uses: actions/checkout@v3
+      - name: Create dir
         run: |
-          npm install -g newman
+          mkdir SampleArtifact
+        
+
+      # # Set up Node.js (required to install Newman)
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '14'  # You can choose another version if necessary
+
+      # # Install Newman globally
+      # - name: Install Newman
+      #   run: |
+      #     npm install -g newman
 
       # Run the Postman collection
       - name: Run Postman Collection
