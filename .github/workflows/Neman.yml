@@ -32,11 +32,11 @@ jobs:
           echo "Listing directory contents"
           dir  # On Windows, `dir` will list files in the current directory
           
-      - name: Upload Newman HTML report
-        uses: actions/upload-artifact@v2  # Upload the report as an artifact
-        with:
-          name: newman-report
-          path: newman-report.html  # Path to the generated report
+      # - name: Upload Newman HTML report
+      #   uses: actions/upload-artifact@v2  # Upload the report as an artifact
+      #   with:
+      #     name: newman-report
+      #     path: newman-report.html  # Path to the generated report
 
       - name: Post status if tests fail
         if: ${{ failure() }}  # Only run if tests fail
